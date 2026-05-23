@@ -67,7 +67,7 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->limit(30),
                 Tables\Columns\TextColumn::make('user.name')->label('Zgłaszający')->searchable(),
-                Tables\Columns\TextColumn::make('assignedIt.name')->label('Przypisany do')->searchable(),
+                Tables\Columns\TextColumn::make('assignedTo.name')->label('Przypisany do')->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
