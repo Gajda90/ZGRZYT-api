@@ -87,8 +87,10 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
-        $request->session()->regenerate();
-
+        
+        if ($request->hasSession()) {
+          $request->session()->regenerate();
+        }
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([

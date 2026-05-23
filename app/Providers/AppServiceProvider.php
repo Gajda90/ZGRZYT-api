@@ -29,6 +29,16 @@ class AppServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
         }
 
+      
+
+    if (request()->is('admin*') || request()->is('filament*') || request()->is('livewire*')) {
+        config([
+            'session.domain' => null,
+            'session.same_site' => 'lax',
+        ]);
+    }
+
+
         User::observe(UserObserver::class);
         Ticket::observe(TicketObserver::class);
         Message::observe(MessageObserver::class);
