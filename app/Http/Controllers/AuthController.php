@@ -23,7 +23,7 @@ class AuthController extends Controller
         summary: "Logowanie użytkownika",
         description: "Uwierzytelnia użytkownika na podstawie loginu i hasła, a w odpowiedzi zwraca token dostępowy (Bearer Token) oraz rolę użytkownika. Ten endpoint jest publiczny i nie wymaga autoryzacji.",
         tags: ["Autoryzacja"],
-        security: [], 
+        security: [],
         requestBody: new OA\RequestBody(
             required: true,
             description: "Dane logowania użytkownika.",
@@ -85,6 +85,9 @@ class AuthController extends Controller
                 'message' => 'Konto jest zbanowane. Skontaktuj się z administratorem.'
             ], 403);
         }
+
+        Auth::login($user);
+        $request->session()->regenerate();
 
         $token = $user->createToken('api-token')->plainTextToken;
 

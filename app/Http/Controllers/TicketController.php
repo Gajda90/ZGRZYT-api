@@ -41,13 +41,17 @@ class TicketController extends Controller
             ? $user->tickets()->with('assignedTo')
             : Ticket::with('user', 'assignedTo');
 
+        if ($request->boolean('unassigned') && $user->role !== 'user') {
+            $query->whereNull('assigned_it_id');
+        }
+
         // Wyszukiwanie
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $searchTerm = '%' . mb_strtolower($search, 'UTF-8') . '%';
             $query->where(function ($q) use ($searchTerm) {
                 $q->whereRaw('LOWER(title) LIKE ?', [$searchTerm])
-                  ->orWhereRaw('LOWER(description) LIKE ?', [$searchTerm]);
+                    ->orWhereRaw('LOWER(description) LIKE ?', [$searchTerm]);
             });
         }
 
@@ -59,6 +63,11 @@ class TicketController extends Controller
             $query->orderBy($sortBy, $sortDirection);
         } else {
             $query->latest(); // domyślnie latest
+        }
+
+        if($request->boolean('noPagination') && $user->role !== 'user') {
+            $tickets = $query->get();
+            return response()->json($tickets);
         }
 
         // Paginacja

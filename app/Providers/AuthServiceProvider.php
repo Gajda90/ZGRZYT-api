@@ -33,9 +33,9 @@ class AuthServiceProvider extends ServiceProvider
             Log::info('Gate access-admin-features', ['user_id' => $user->id, 'role' => $user->role, 'allowed' => $allowed]);
             return $allowed;
         });
-        
+
         Gate::define('access-it-features', function (User $user) {
-            $allowed = strtolower($user->role) === 'it';
+            $allowed = in_array(strtolower($user->role), ['admin', 'it']);
             Log::info('Gate access-it-features', ['user_id' => $user->id, 'role' => $user->role, 'allowed' => $allowed]);
             return $allowed;
         });

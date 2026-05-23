@@ -8,6 +8,7 @@ use App\Http\Controllers\LogController as AdminLogController;
 use App\Http\Controllers\ListController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,14 @@ use Illuminate\Support\Facades\Route;
 | do grupy middleware "api".
 |
 */
-
+Route::get('/debug-session', function () {
+    return response()->json([
+        'session_id' => session()->getId(),
+        'user' => auth()->user(),
+        'cookies' => request()->cookies->all(),
+        'headers' => request()->headers->all()
+    ]);
+});
 // --- Trasy publiczne ---
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/request-account', [AuthController::class, 'requestAccount']);
@@ -63,3 +71,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('active-users', [ListController::class, 'activeUsers'])->name('lists.active-users');
     });
 });
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
